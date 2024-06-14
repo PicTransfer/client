@@ -6,6 +6,17 @@ import {
   getFiles,
   updateRole,
 } from "../services/apiService";
+import {
+  Container,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 const Spaces = ({ token }) => {
   const [spaces, setSpaces] = useState([]);
@@ -55,81 +66,115 @@ const Spaces = ({ token }) => {
     if (selectedSpace) {
       fetchFiles(selectedSpace._id);
     }
-  }, [selectedSpace]);
+  }, [selectedSpace, fetchFiles]); // Ajoutez fetchFiles comme dépendance
 
   return (
-    <div>
-      <h2>Spaces</h2>
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        Spaces
+      </Typography>
       <form onSubmit={handleCreateSpace}>
-        <input
-          type="text"
-          placeholder="Space Name"
+        <TextField
+          label="Space Name"
           value={spaceName}
           onChange={(e) => setSpaceName(e.target.value)}
+          variant="outlined"
+          fullWidth
+          margin="normal"
         />
-        <button type="submit">Create Space</button>
+        <Button type="submit" variant="contained" color="primary">
+          Create Space
+        </Button>
       </form>
 
-      <h3>Available Spaces</h3>
-      <ul>
+      <Typography variant="h6" gutterBottom>
+        Available Spaces
+      </Typography>
+      <List>
         {spaces.map((space) => (
-          <li key={space._id} onClick={() => setSelectedSpace(space)}>
-            {space.name}
-          </li>
+          <ListItem
+            button
+            key={space._id}
+            onClick={() => setSelectedSpace(space)}
+          >
+            <ListItemText primary={space.name} />
+          </ListItem>
         ))}
-      </ul>
+      </List>
 
       {selectedSpace && (
         <div>
-          <h3>Selected Space: {selectedSpace.name}</h3>
+          <Typography variant="h6" gutterBottom>
+            Selected Space: {selectedSpace.name}
+          </Typography>
           <form onSubmit={handleAddMember}>
-            <input
-              type="text"
-              placeholder="New Member ID"
+            <TextField
+              label="New Member ID"
               value={newMember}
               onChange={(e) => setNewMember(e.target.value)}
+              variant="outlined"
+              fullWidth
+              margin="normal"
             />
-            <select
+            <Select
               value={newMemberRole}
               onChange={(e) => setNewMemberRole(e.target.value)}
+              fullWidth
+              variant="outlined"
+              margin="normal"
             >
-              <option value="member">Member</option>
-              <option value="admin">Admin</option>
-            </select>
-            <button type="submit">Add Member</button>
+              <MenuItem value="member">Member</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </Select>
+            <Button type="submit" variant="contained" color="primary">
+              Add Member
+            </Button>
           </form>
 
           <form onSubmit={handleUpdateRole}>
-            <input
-              type="text"
-              placeholder="Member ID"
+            <TextField
+              label="Member ID"
               value={updateMember}
               onChange={(e) => setUpdateMember(e.target.value)}
+              variant="outlined"
+              fullWidth
+              margin="normal"
             />
-            <select
+            <Select
               value={updateMemberRole}
               onChange={(e) => setUpdateMemberRole(e.target.value)}
+              fullWidth
+              variant="outlined"
+              margin="normal"
             >
-              <option value="member">Member</option>
-              <option value="admin">Admin</option>
-            </select>
-            <button type="submit">Update Role</button>
+              <MenuItem value="member">Member</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </Select>
+            <Button type="submit" variant="contained" color="primary">
+              Update Role
+            </Button>
           </form>
 
           <form onSubmit={handleUploadFile}>
             <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-            <button type="submit">Upload File</button>
+            <Button type="submit" variant="contained" color="primary">
+              Upload File
+            </Button>
           </form>
 
-          <h4>Files in {selectedSpace.name}</h4>
-          <ul>
+          <Typography variant="h6" gutterBottom>
+            Files in {selectedSpace.name}
+          </Typography>
+          <List>
             {files.map((file, index) => (
-              <li key={index}>{file}</li>
+              <ListItem key={index}>
+                <ListItemText primary={file} />
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 
